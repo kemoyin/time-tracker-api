@@ -10,7 +10,6 @@ const employeeSchema = new mongoose.Schema({
         type: Number,
         min: 0,
         required: true,
-        unique: true
     },
     name: {
         type: String,
@@ -50,6 +49,8 @@ employeeSchema.virtual('schedules', {
 //
 //     return employeeObject
 // }
+
+employeeSchema.index({"employerId": 1, "employeeNumber": 1}, {"unique": true})
 
 const Employee = trackerDB.model('Employee', employeeSchema)
 

@@ -13,8 +13,15 @@ const midnightScheduler = () => {
             const employees = await Employee.find({isActive: true})
 
             employees.forEach(async employee => {
-                const scheduleNow = await Schedule.findOne({employee: employee._id, date: now})
-                const scheduleBefore = await Schedule.findOne({employee: employee._id, date: yesterday})
+                let scheduleNow = await Schedule.findOne({employee: employee._id, date: now})
+                let scheduleBefore = await Schedule.findOne({employee: employee._id, date: yesterday})
+
+                if(!scheduleNow) {
+                    scheduleNow = await new Schedule({
+                        employee: employee._id,
+                        date: now
+                    }).save()
+                }
 
                 if(scheduleNow.startTime.length == 0) {
                     scheduleNow.startTime = scheduleNow.startTime.concat({start: now})

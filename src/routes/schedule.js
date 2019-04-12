@@ -5,8 +5,12 @@ const router = new express.Router()
 
 router.post('/schedules', scheduleController.createSchedule)
 
-router.get('/schedules/readAll/:id', scheduleController.readAllSchedules)
+router.get('/schedules', scheduleController.readAllSchedules)
 router.get('/schedules/:id', scheduleController.readSchedule)
+
+router.patch('/schedules/:id', scheduleController.updateSchedule)
+
+router.delete('/schedules/:id', scheduleController.deleteSchedule)
 
 router.post('/schedules/log/:id', scheduleController.logTime)
 

@@ -12,9 +12,9 @@ const createSchedule = async (req, res) => {
 }
 
 const readAllSchedules = async (req, res) => {
-    const employee = req.params.id
+    //const employee = req.params.id
     try {
-        const schedules = await Schedule.find({employee})
+        const schedules = await Schedule.find()
         if (!schedules) {
             return res.status(404).send()
         }
@@ -54,14 +54,14 @@ const updateSchedule = async (req, res) => {
         }
         res.send(schedule)
     } catch (e) {
-        res.status(400).send()
+        res.status(500).send()
     }
 }
 
 const deleteSchedule = async (req, res) => {
     const _id = req.params.id
     try {
-        const schedule = await Schedule.findByIdAndDelete(id)
+        const schedule = await Schedule.findByIdAndDelete(_id)
         if (!schedule) {
             return res.status(404).send()
         }
@@ -78,13 +78,14 @@ const logTime = async (req, res) => {
 
         const schedule = await Schedule.findOne({employee: _id, date})
         await schedule.populate('employee').execPopulate()
+
         const updated = await schedule.logTracking(schedule.employee.isActive)
         //vielleicht kann man das anders lösen???
         await Employee.findByIdAndUpdate(_id, {isActive: !schedule.employee.isActive})
         await updated.save()
         res.send(updated)
     } catch (e) {
-        res.status(400).send(e)
+        res.status(500).send(e)
     }
 }
 

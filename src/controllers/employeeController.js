@@ -57,7 +57,7 @@ const updateEmployee = async (req, res) => {
         }
         res.send(employee)
     } catch (e) {
-        res.status(400).send()
+        res.status(500).send()
     }
 }
 
@@ -72,7 +72,7 @@ const deleteEmployee = async (req, res) => {
         }
         res.send(employee)
     } catch (e) {
-        res.status(400).send()
+        res.status(500).send()
     }
 }
 

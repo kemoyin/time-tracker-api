@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: true,
         trim: true,
         lowercase: true,
@@ -78,6 +77,8 @@ userSchema.virtual('employee', {
     localField: '_id',
     foreignField: 'employerId'
 })
+
+userSchema.index({"email": 1}, {"unique": true})
 
 const User = authDB.model('User', userSchema)
 
