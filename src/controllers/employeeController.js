@@ -70,7 +70,7 @@ const deleteEmployee = async (req, res) => {
         if(!employee) {
             return res.status(404).send()
         }
-        res.send(employee)
+        res.status(204).send(employee)
     } catch (e) {
         res.status(500).send()
     }

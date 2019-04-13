@@ -65,7 +65,7 @@ const deleteSchedule = async (req, res) => {
         if (!schedule) {
             return res.status(404).send()
         }
-        res.send(schedule)
+        res.status(204).send(schedule)
     } catch (e) {
         res.status(500).send()
     }
@@ -80,12 +80,13 @@ const logTime = async (req, res) => {
         await schedule.populate('employee').execPopulate()
 
         const updated = await schedule.logTracking(schedule.employee.isActive)
-        //vielleicht kann man das anders lösen???
+
+        //CHECK - Vielleicht kann man das anders lösen?
         await Employee.findByIdAndUpdate(_id, {isActive: !schedule.employee.isActive})
         await updated.save()
         res.send(updated)
     } catch (e) {
-        res.status(500).send(e)
+        res.status(400).send(e)
     }
 }
 

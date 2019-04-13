@@ -30,12 +30,6 @@ const userSchema = new mongoose.Schema({
             // Hier muss ein RegEx validieren
         }
     },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }],
     emailValidated: {
         type: Boolean,
         required: true,
@@ -48,6 +42,12 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
+userSchema.virtual('employee', {
+    ref: 'Employee',
+    localField: '_id',
+    foreignField: 'employerId'
+})
+
 userSchema.pre('save', async function (next) {
     const user = this
 
@@ -57,26 +57,26 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-userSchema.statics.findByCredentials = async (email, password) => {
-    const user = await User.findOne({email})
+// userSchema.statics.verifyCredentials = async (email, password) => {
+//     const user = await User.findOne({email})
+//
+//     if(!user) {
+//         throw new Error('An error occured')
+//     }
+//     const isMatched = await bcrypt.compare(password, user.password)
+//
+//     if(!isMatched) {
+//         throw new Error('An error occured')
+//     }
+//
+//     return user
+// }
 
-    if(!user) {
-        throw new Error('An error occured')
-    }
-    const isMatched = await bcrypt.compare(password, user.password)
-
-    if(!isMatched) {
-        throw new Error('An error occured')
-    }
-
-    return user
+userSchema.methods.generateJWT = async function () {
+    const user = this
+    const token = await jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET, {expiresIn: '12h'})
+    return token
 }
-
-userSchema.virtual('employee', {
-    ref: 'Employee',
-    localField: '_id',
-    foreignField: 'employerId'
-})
 
 userSchema.index({"email": 1}, {"unique": true})
 
