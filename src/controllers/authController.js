@@ -1,7 +1,7 @@
 const passport = require('passport')
 const { User } = require('../models/index')
 
-const login = (req, res, next) => {
+const login = (req, res) => {
     passport.authenticate('login',
         (err, user, info) => {
         if(err || !user) {
@@ -20,7 +20,7 @@ const login = (req, res, next) => {
             return res.send({user, token})
 
         })
-    })(req, res, next)
+    })(req, res)
 }
 
 const logoutUser = async (req, res) => {

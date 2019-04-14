@@ -96,6 +96,7 @@ scheduleSchema.methods.logTracking = async function (isActive) {
         const start = schedule.startTime[schedule.startTime.length - 1].start
         const stop = schedule.stopTime[schedule.stopTime.length - 1].stop
 
+
         schedule.actual += Math.round(((stop - start) / MS_PER_HOUR) * 1e2) / 1e2
     } else {
         schedule.startTime = schedule.startTime.concat({start: timestamp})

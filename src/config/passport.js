@@ -29,21 +29,21 @@ passport.use('login', new LocalStrategy({
     }
 ))
 
-passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('JWT'),
-        secretOrKey: process.env.JWT_SECRET
+passport.use('auth', new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET,
+        passReqToCallback: true
     },
-    async (payload, done) => {
-
+    async (req, payload, done) => {
         try {
             const user = await User.findById({_id: payload._id})
-
             if (!user) {
                 return done(null, false, {message: 'An error has occurred. Please login.'})
             }
+            req.user = user
             return done(null, user)
         } catch (e) {
-            return done(e, false)
+            return done(e)
         }
 
     }
