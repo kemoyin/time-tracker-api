@@ -1,13 +1,19 @@
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
-const {Session} = require('../models/index')
+const { Session } = require('../models/index')
 
+/**
+ * Controller method for logging in a user.
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 const login = async (req, res) => {
     passport.authenticate('login',
         (err, user, info) => {
             if (err || !user) {
                 return res.status(400).send({
-                    message: info ? info.message : 'Login failed'
+                    message: info ? info.message : 'Login failed.'
                 })
             }
 
@@ -21,7 +27,7 @@ const login = async (req, res) => {
                 try {
                     await session.save()
                 } catch (e) {
-                    throw new Error('An Error Occured')
+                    throw new Error('An Error Occurred.')
                 }
 
                 const token = jwt.sign({
@@ -35,6 +41,12 @@ const login = async (req, res) => {
         })(req, res)
 }
 
+/**
+ * Controller method for refreshing an expired Json Web Token.
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 const refresh = async (req, res) => {
     passport.authenticate('refresh',
         async (err, session, info) => {
@@ -48,7 +60,7 @@ const refresh = async (req, res) => {
                 await session.save()
 
             } catch (e) {
-                throw new Error('An Error Occured')
+                throw new Error('An Error Occurred.')
             }
 
             const token = jwt.sign({
@@ -60,9 +72,15 @@ const refresh = async (req, res) => {
         })(req, res)
 }
 
+/**
+ * Controller method for logging out a user. Actual Session of the Token will be deleted.
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 const logout = async (req, res) => {
-    await Session.findOneAndDelete({_userId: req.user._id})
-    res.send('logged out')
+    await req.session.delete()
+    res.send('Logout successful.')
 }
 
 module.exports = {

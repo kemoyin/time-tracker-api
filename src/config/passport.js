@@ -1,10 +1,13 @@
-const passport = require('passport/lib')
+const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const {Strategy: JWTStrategy, ExtractJwt} = require('passport-jwt')
 const {Strategy: LocalStrategy} = require('passport-local')
 
 const {User, Session} = require('../models/index')
 
+/**
+ * Strategy for logging in with E-Mail an Password.
+ */
 passport.use('login', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
@@ -29,6 +32,9 @@ passport.use('login', new LocalStrategy({
     }
 ))
 
+/**
+ * Strategy for verifying the Json Web Token by using the Auth Middleware
+ */
 passport.use('auth', new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET,
@@ -49,6 +55,10 @@ passport.use('auth', new JWTStrategy({
     }
 ))
 
+/**
+ * Strategy for refreshing an expired Json Web Token. Session version in payload and
+ * version in database has to be identical.
+ */
 passport.use('refresh', new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         ignoreExpiration: true,

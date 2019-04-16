@@ -12,9 +12,9 @@ const createSchedule = async (req, res) => {
 }
 
 const readAllSchedules = async (req, res) => {
-    //const employee = req.params.id
+    const _id = req.params.id
     try {
-        const schedules = await Schedule.find()
+        const schedules = await Schedule.find({_employeeId: _id})
         if (!schedules) {
             return res.status(404).send()
         }
@@ -71,7 +71,7 @@ const deleteSchedule = async (req, res) => {
     }
 }
 
-const logTime = async (req, res) => {
+const trackTime = async (req, res) => {
     const _id = req.params.id
     try {
         const date = moment(new Date()).format("YYYY-MM-DDT00:00:00.000") + "Z"
@@ -90,11 +90,15 @@ const logTime = async (req, res) => {
     }
 }
 
+const setHolidays = async (req, res) => {
+
+}
+
 module.exports = {
     createSchedule,
     readAllSchedules,
     readSchedule,
     updateSchedule,
     deleteSchedule,
-    logTime
+    trackTime
 }

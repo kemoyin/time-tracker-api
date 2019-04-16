@@ -38,7 +38,7 @@ const deleteUser = async (req, res) => {
     try {
         const user = req.user
         await user.remove()
-        res.send({user})
+        res.status(204).send()
     } catch (e) {
         res.status(500).send()
     }

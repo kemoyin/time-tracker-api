@@ -10,6 +10,7 @@ const auth = (req, res, next) => {
         }
         try {
             const user = await User.findById({_id: session._userId})
+            req.session = session
             req.user = user
         } catch (e) {
             return res.status(401).send({

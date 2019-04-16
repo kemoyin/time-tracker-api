@@ -1,6 +1,7 @@
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 crypto.randomBytes(256, function(ex, buf) {
-    if (ex) throw ex;
+    if (ex)
+        throw ex
     console.log(buf.toString('base64'))
-});
+})
