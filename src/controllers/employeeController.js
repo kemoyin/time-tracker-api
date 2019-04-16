@@ -1,11 +1,11 @@
 const { Employee } = require('../models/index')
 
 const createEmployee = async (req, res) => {
-    const employerId = req.user._id
+    const _employerId = req.user._id
 
     const employee = new Employee({
         ...req.body,
-        employerId
+        _employerId
     })
     try {
         await employee.save()
@@ -17,9 +17,9 @@ const createEmployee = async (req, res) => {
 }
 
 const readAllEmployees = async (req, res) => {
-    const employerId = req.user._id
+    const _employerId = req.user._id
     try {
-        const employees = await Employee.find({employerId})
+        const employees = await Employee.find({_employerId})
 
         if(!employees) {
             return res.status(404).send()
@@ -32,9 +32,9 @@ const readAllEmployees = async (req, res) => {
 
 const readEmployee = async (req, res) => {
     const _id = req.params.id
-    const employerId = req.user._id
+    const _employerId = req.user._id
     try {
-        const employee = await Employee.find({_id, employerId})
+        const employee = await Employee.find({_id, _employerId})
 
         if(!employee) {
             res.status(404).send()
@@ -55,9 +55,9 @@ const updateEmployee = async (req, res) => {
     }
 
     const _id = req.params.id
-    const employerId = req.user._id
+    const _employerId = req.user._id
     try {
-        const employee = await Employee.findOneAndUpdate({_id, employerId}, req.body, {new: true, runValidators: true})
+        const employee = await Employee.findOneAndUpdate({_id, _employerId}, req.body, {new: true, runValidators: true})
         if(!employee) {
             return res.status(404).send()
         }
@@ -69,9 +69,9 @@ const updateEmployee = async (req, res) => {
 
 const deleteEmployee = async (req, res) => {
     const _id = req.params.id
-    const employerId = req.user._id
+    const _employerId = req.user._id
     try {
-        const employee = await Employee.findOneAndDelete({_id, employerId})
+        const employee = await Employee.findOneAndDelete({_id, _employerId})
 
         if(!employee) {
             return res.status(404).send()

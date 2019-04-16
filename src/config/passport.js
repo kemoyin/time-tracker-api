@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const {Strategy: JWTStrategy, ExtractJwt} = require('passport-jwt')
 const {Strategy: LocalStrategy} = require('passport-local')
 
-const {User} = require('../models')
+const {User, Session} = require('../models/index')
 
 passport.use('login', new LocalStrategy({
         usernameField: 'email',
@@ -32,16 +32,37 @@ passport.use('login', new LocalStrategy({
 passport.use('auth', new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET,
-        passReqToCallback: true
+        passReqToCallback: true,
+        session: false
     },
     async (req, payload, done) => {
         try {
-            const user = await User.findById({_id: payload._id})
-            if (!user) {
+            const session = await Session.findById({_id: payload._sessionId})
+            if (!session) {
                 return done(null, false, {message: 'An error has occurred. Please login.'})
             }
-            req.user = user
-            return done(null, user)
+            return done(null, session)
+        } catch (e) {
+            return done(e)
+        }
+
+    }
+))
+
+passport.use('refresh', new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ignoreExpiration: true,
+        secretOrKey: process.env.JWT_SECRET,
+        passReqToCallback: true,
+        session: false
+    },
+    async (req, payload, done) => {
+        try {
+            const session = await Session.findById({_id: payload._sessionId})
+            if (!session || payload.version !== session.version) {
+                return done(null, false, {message: 'An error has occurred. Please login.'})
+            }
+            return done(null, session)
         } catch (e) {
             return done(e)
         }

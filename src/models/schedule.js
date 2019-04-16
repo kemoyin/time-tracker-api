@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const moment = require('moment')
 const validator = require('validator')
-const {trackerDB} = require('../db')
+const moment = require('moment')
+const { trackerDB } = require('../db/index')
 
 
 
 const scheduleSchema = new mongoose.Schema({
-    employee: {
+    _employeeId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Employee'

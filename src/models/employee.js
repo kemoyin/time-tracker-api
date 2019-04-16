@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const {trackerDB} = require('../db')
+const { trackerDB } = require('../db/index')
 
 const employeeSchema = new mongoose.Schema({
-    employerId: {
+    _employerId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
@@ -37,7 +37,7 @@ const employeeSchema = new mongoose.Schema({
 employeeSchema.virtual('schedules', {
     ref: 'Schedule',
     localField: '_id',
-    foreignField: 'employee'
+    foreignField: '_employeeId'
 })
 
 // employeeSchema.methods.toJSON = function() {
@@ -50,7 +50,7 @@ employeeSchema.virtual('schedules', {
 //     return employeeObject
 // }
 
-employeeSchema.index({"employerId": 1, "employeeNumber": 1}, {"unique": true})
+employeeSchema.index({"_employerId": 1, "employeeNumber": 1}, {"unique": true})
 
 const Employee = trackerDB.model('Employee', employeeSchema)
 

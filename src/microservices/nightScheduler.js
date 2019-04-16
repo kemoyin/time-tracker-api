@@ -2,7 +2,7 @@ const moment = require('moment')
 const CronJob = require('cron').CronJob
 const { Employee, Schedule } = require('../models/index')
 
-const midnightScheduler = () => {
+const nightScheduler = () => {
     const MS_PER_HOUR = 1000 * 60 * 60
     new CronJob('00 00 00 * * *', async () => {
         try {
@@ -48,4 +48,4 @@ const midnightScheduler = () => {
 
 }
 
-midnightScheduler()
+nightScheduler()

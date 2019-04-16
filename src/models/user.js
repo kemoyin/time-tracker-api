@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
-const jwt = require('jsonwebtoken')
-const {authDB} = require('../db')
+const { authDB } = require('../db/index')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -45,7 +44,7 @@ const userSchema = new mongoose.Schema({
 userSchema.virtual('employee', {
     ref: 'Employee',
     localField: '_id',
-    foreignField: 'employerId'
+    foreignField: '_employerId'
 })
 
 userSchema.pre('save', async function (next) {
@@ -56,27 +55,6 @@ userSchema.pre('save', async function (next) {
     }
     next()
 })
-
-// userSchema.statics.verifyCredentials = async (email, password) => {
-//     const user = await User.findOne({email})
-//
-//     if(!user) {
-//         throw new Error('An error occured')
-//     }
-//     const isMatched = await bcrypt.compare(password, user.password)
-//
-//     if(!isMatched) {
-//         throw new Error('An error occured')
-//     }
-//
-//     return user
-// }
-
-userSchema.methods.generateJWT = async function () {
-    const user = this
-    const token = await jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET, {expiresIn: '12h'})
-    return token
-}
 
 userSchema.index({"email": 1}, {"unique": true})
 
